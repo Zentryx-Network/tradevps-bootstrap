@@ -46,20 +46,19 @@ $REPO_RAW = 'https://raw.githubusercontent.com/Zentryx-Network/tradevps-bootstra
 $VERSION  = '0.1.0'
 
 # ── Banner ───────────────────────────────────────────────────────
+# Uses Write-Host -ForegroundColor for cross-version support.
+# (Backtick-e ANSI escapes only work in PowerShell 7+; we target 5.1
+# as the lowest common denominator since that's Windows default.)
 function Show-Banner {
-  $purple = "`e[38;5;141m"
-  $reset  = "`e[0m"
-  $dim    = "`e[2m"
-
   Write-Host ""
-  Write-Host "$purple  ███████╗███████╗███╗   ██╗████████╗██████╗ ██╗   ██╗██╗  ██╗$reset"
-  Write-Host "$purple  ╚══███╔╝██╔════╝████╗  ██║╚══██╔══╝██╔══██╗╚██╗ ██╔╝╚██╗██╔╝$reset"
-  Write-Host "$purple    ███╔╝ █████╗  ██╔██╗ ██║   ██║   ██████╔╝ ╚████╔╝  ╚███╔╝ $reset"
-  Write-Host "$purple   ███╔╝  ██╔══╝  ██║╚██╗██║   ██║   ██╔══██╗  ╚██╔╝   ██╔██╗ $reset"
-  Write-Host "$purple  ███████╗███████╗██║ ╚████║   ██║   ██║  ██║   ██║   ██╔╝ ██╗$reset"
-  Write-Host "$purple  ╚══════╝╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝$reset"
+  Write-Host "  ███████╗███████╗███╗   ██╗████████╗██████╗ ██╗   ██╗██╗  ██╗" -ForegroundColor Magenta
+  Write-Host "  ╚══███╔╝██╔════╝████╗  ██║╚══██╔══╝██╔══██╗╚██╗ ██╔╝╚██╗██╔╝" -ForegroundColor Magenta
+  Write-Host "    ███╔╝ █████╗  ██╔██╗ ██║   ██║   ██████╔╝ ╚████╔╝  ╚███╔╝ " -ForegroundColor Magenta
+  Write-Host "   ███╔╝  ██╔══╝  ██║╚██╗██║   ██║   ██╔══██╗  ╚██╔╝   ██╔██╗ " -ForegroundColor Magenta
+  Write-Host "  ███████╗███████╗██║ ╚████║   ██║   ██║  ██║   ██║   ██╔╝ ██╗" -ForegroundColor Magenta
+  Write-Host "  ╚══════╝╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝" -ForegroundColor Magenta
   Write-Host ""
-  Write-Host "$dim  tradevps-bootstrap v$VERSION  ·  zentryxnet.lat$reset"
+  Write-Host "  tradevps-bootstrap v$VERSION  -  zentryxnet.lat" -ForegroundColor DarkGray
   Write-Host ""
 }
 
