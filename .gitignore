@@ -1,0 +1,24 @@
+# Local test artifacts
+*.log
+*.tmp
+*.bak
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# PowerShell module test caches
+*.psd1.bak
+TestResults*.xml
+
+# Local installer downloads (don't commit, fetch fresh each run)
+installers/
+*.exe
+*.msi
