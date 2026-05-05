@@ -23,7 +23,11 @@ jobs:
         run: |
           $results = Invoke-ScriptAnalyzer -Path . -Recurse `
             -Severity @('Error','Warning') `
-            -ExcludeRule PSAvoidUsingWriteHost,PSUseShouldProcessForStateChangingFunctions,PSAvoidUsingInvokeExpression
+            -ExcludeRule `
+              PSAvoidUsingWriteHost, `
+              PSUseShouldProcessForStateChangingFunctions, `
+              PSAvoidUsingInvokeExpression, `
+              PSUseBOMForUnicodeEncodedFile
           if ($results) {
             $results | Format-Table -AutoSize
             Write-Error "PSScriptAnalyzer found $($results.Count) issue(s)."

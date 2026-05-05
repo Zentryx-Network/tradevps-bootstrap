@@ -91,16 +91,20 @@ OK "Telemetry minimized"
 $totalRamMB = [math]::Floor((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1MB)
 $pagefileMB = [math]::Floor($totalRamMB * 1.5)
 try {
-  $cs = Get-WmiObject Win32_ComputerSystem -EnableAllPrivileges
-  $cs.AutomaticManagedPagefile = $false
-  $cs.Put() | Out-Null
+  # Disable Windows-managed pagefile (CIM, PS 3.0+)
+  $cs = Get-CimInstance -ClassName Win32_ComputerSystem
+  if ($cs.AutomaticManagedPagefile) {
+    Set-CimInstance -InputObject $cs -Property @{ AutomaticManagedPagefile = $false } | Out-Null
+  }
 
-  # Remove any existing pagefile, then create a fixed-size one on C:
-  Get-WmiObject -Query "SELECT * FROM Win32_PageFileSetting" | ForEach-Object { $_.Delete() } 2>$null
-  Set-WmiInstance -Class Win32_PageFileSetting -Arguments @{
-    name = 'C:\pagefile.sys'
-    InitialSize = $pagefileMB
-    MaximumSize = $pagefileMB
+  # Remove any existing pagefile setting(s), then create a fixed-size one on C:
+  Get-CimInstance -ClassName Win32_PageFileSetting -ErrorAction SilentlyContinue |
+    ForEach-Object { Remove-CimInstance -InputObject $_ -ErrorAction SilentlyContinue }
+
+  New-CimInstance -ClassName Win32_PageFileSetting -Property @{
+    Name        = 'C:\pagefile.sys'
+    InitialSize = [uint32]$pagefileMB
+    MaximumSize = [uint32]$pagefileMB
   } | Out-Null
   OK "Page file: fixed ${pagefileMB} MB on C:"
 } catch {

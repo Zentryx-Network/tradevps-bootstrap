@@ -48,6 +48,7 @@ foreach ($path in $excludePaths) {
   } catch {
     # Common: path doesn't exist yet (broker not installed). That's fine,
     # the exclusion still gets registered for when the folder appears.
+    Write-Verbose "Exclusion path '$path' could not be added: $($_.Exception.Message)"
   }
 }
 OK "Folder exclusions added: $added paths (Defender skips them in real-time scan)"
@@ -67,7 +68,9 @@ foreach ($proc in $excludeProcs) {
   try {
     Add-MpPreference -ExclusionProcess $proc -ErrorAction Stop
     $addedProcs++
-  } catch {}
+  } catch {
+    Write-Verbose "Process exclusion '$proc' could not be added: $($_.Exception.Message)"
+  }
 }
 OK "Process exclusions added: $addedProcs trading binaries"
 

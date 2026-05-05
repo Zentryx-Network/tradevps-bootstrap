@@ -63,11 +63,13 @@ function Show-Banner {
 }
 
 # ── Step helpers ─────────────────────────────────────────────────
-$global:STEP_NUM = 0
+# Use $script: scope (not $global:) so the counter stays bound to
+# this script and doesn't leak into the user's session.
+$script:STEP_NUM = 0
 function Step($title) {
-  $global:STEP_NUM++
+  $script:STEP_NUM++
   Write-Host ""
-  Write-Host "[$global:STEP_NUM] $title" -ForegroundColor Cyan
+  Write-Host "[$($script:STEP_NUM)] $title" -ForegroundColor Cyan
 }
 function OK($msg)   { Write-Host "    [OK]   $msg" -ForegroundColor Green }
 function Skip($msg) { Write-Host "    [skip] $msg" -ForegroundColor DarkGray }
@@ -98,7 +100,7 @@ function FlagValue($name, $default) {
 # Modules are downloaded on demand from the repo. This keeps the
 # bootstrap entry small (one curl-able file) while letting us split
 # logic across many smaller, testable scripts.
-function Load-Module($name) {
+function Import-RemoteModule($name) {
   $url = "$REPO_RAW/modules/$name.ps1"
   try {
     $code = (Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 30).Content
@@ -146,7 +148,7 @@ foreach ($m in $modules) {
     continue
   }
   try {
-    $sb = Load-Module $m.name
+    $sb = Import-RemoteModule $m.name
     & $sb
   } catch {
     Fail "Module '$($m.name)' failed: $($_.Exception.Message)"
