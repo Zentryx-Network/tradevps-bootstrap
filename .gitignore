@@ -22,3 +22,7 @@ TestResults*.xml
 installers/
 *.exe
 *.msi
+
+# Wrangler local state (account info, build cache)
+.wrangler/
+wrangler.toml.local
